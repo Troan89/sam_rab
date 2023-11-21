@@ -1,0 +1,89 @@
+.counter {
+    border: 2px deepskyblue solid;
+    width: 500px;
+    height: 250px;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+
+.counterInt {
+    border: 2px deepskyblue solid;
+    margin-top: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+    width: 450px;
+    height: 100px;
+    border-radius: 10px;
+    background: deepskyblue ;
+    font-size: 86px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 90px;
+}
+
+.counterButton {
+    border: 2px deepskyblue solid;
+    width: 450px;
+    height: 100px;
+    border-radius: 10px;
+    margin-top: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button {
+    width: 100px;
+    height: 50px;
+    margin-right: 20px;
+    border-radius: 10px;
+    background: deepskyblue;
+    font-size: 24px;
+}
+
+.textRed {
+    font-size: 86px;
+    color: red;
+}
+
+.inputError {
+    border-color: red;
+    background-color: red;
+    font-size: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.counterTextSet {
+    font-size: 24px;
+}
+
+.counterErrorSetValue {
+    color: red;
+    font-size: 24px;
+}
+
+.menuCounter{
+    margin: 15px;
+    font-size: 30px;
+    color: deepskyblue;
+    font-weight: bold;
+}
+.menuCounterSpan {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.input {
+    font-size: 20px;
+    border-radius: 10px;
+    border-color: deepskyblue;
+    text-align: center;
+}
+
+
+
