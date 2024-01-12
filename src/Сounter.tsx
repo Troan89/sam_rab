@@ -1,44 +1,48 @@
 import React, {useEffect} from "react";
 import s from './Counter.module.css'
 import {Button} from "./Button";
+import {useDispatch, useSelector} from "react-redux";
+import {AppState_T} from "./store/store";
+import {counterStartAC, initialStateApp_T} from "./reduecrs/appReducer";
 
 type CounterType = {
-    counter: number
-    setCounter: (value: number) => void
-    onSet:boolean
-    error:boolean
+    // counter: number
+    // setCounter: (value: number) => void
+    // onSet:boolean
+    // error:boolean
 }
 
 export const Counter = (props: CounterType) => {
     let minCounter = Number(localStorage.getItem("counterStart"))
     let maxCounter = Number(localStorage.getItem("counterMax"))
 
+    const app = useSelector<AppState_T, initialStateApp_T>(state => state.app)
+
+    const dispatch = useDispatch()
+
     const callBackInt = () => {
-        if (props.counter < maxCounter) {
-            props.setCounter(props.counter + 1)
-        }
+        if (app.counter < maxCounter) dispatch(counterStartAC(app.counter + 1))
     }
-    const callBackReset = () => {
-        props.setCounter(minCounter)
-    }
-    const counterMax = `${s.counterInt} ${props.counter >= Number(maxCounter) ? s.textRed : ''}`
+    const callBackReset = () => dispatch(counterStartAC(minCounter))
+
+    const counterMax = `${s.counterInt} ${app.counter >= Number(maxCounter) ? s.textRed : ''}`
 
     return (
         <div className={s.counter}>
-                <div className={`${counterMax} ${props.onSet? '' : s.counterTextSet } ${props.error && s.counterErrorSetValue}`}>
-                    {props.error
+                <div className={`${counterMax} ${app.onSet? '' : s.counterTextSet } ${app.error && s.counterErrorSetValue}`}>
+                    {app.error
                         ? "Incorrect value!"
-                        : props.onSet ? props.counter : "enter values and press 'set'"}
+                        : app.onSet ? app.counter : "enter values and press 'set'"}
                 </div>
                 <div className={s.counterButton}>
                     <div>
                         <Button callBack={callBackInt}
-                                onSet={!props.onSet || props.counter === maxCounter}
+                                onSet={!app.onSet || app.counter === maxCounter}
                         >Int </Button>
                     </div>
                     <div>
                         <Button callBack={callBackReset}
-                                onSet={!props.onSet || props.counter === minCounter}
+                                onSet={!app.onSet || app.counter === minCounter}
                         >Reset </Button>
                     </div>
                 </div>

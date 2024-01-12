@@ -1,50 +1,61 @@
 import s from "./Counter.module.css";
 import React, {ChangeEvent, useEffect, useState} from "react";
-import { Button } from "./Button";
+import {Button} from "./Button";
+import {useDispatch, useSelector} from "react-redux";
+import {AppState_T} from "./store/store";
+import {updateValueAC} from "./reduecrs/counterMenuReducer";
+import {counterStartAC, initialStateApp_T, onSetAC, setErrorAC} from "./reduecrs/appReducer";
 
-type CounterType = {
-    counter: number
-    setCounter: (value: number) => void
-    onSet: boolean
-    setOnSet: (onSet: boolean) => void
-    error: boolean
-    setError: (error: boolean) => void
-}
+type CounterType = {}
 
 export const CounterMenu = (props: CounterType) => {
-    const [max, setMax] = useState<number>(0)
-    const [start, setStart] = useState<number>(0)
+    const max = useSelector<AppState_T, number>(state => state.counterMenu.max)
+    const start = useSelector<AppState_T, number>(state => state.counterMenu.start)
+    const app = useSelector<AppState_T, initialStateApp_T>(state => state.app)
+
+    const dispatch = useDispatch()
 
     const callBackLocalStorage = () => {
         localStorage.setItem("counterMax", JSON.stringify(max))
         localStorage.setItem("counterStart", JSON.stringify(start))
-        props.setCounter(start)
-        props.setOnSet(true)
+        // props.setCounter(start)
+        dispatch(counterStartAC(start))
+        // props.setOnSet(true)
+        dispatch(onSetAC(true))
     }
     const onChangeMax = (e: ChangeEvent<HTMLInputElement>) => {
         Number(e.currentTarget.value) <= start
-            ? props.setError(true)
-            : props.setError(false)
-        setMax(Number(e.currentTarget.value))
-        props.setOnSet(false)
+            // ? props.setError(true)
+            // : props.setError(false)
+            ? dispatch(setErrorAC(true))
+            : dispatch(setErrorAC(false))
+        // setMax(Number(e.currentTarget.value))
+        dispatch(updateValueAC({max: Number(e.currentTarget.value)}))
+        // props.setOnSet(false)
+        dispatch(onSetAC(false))
     }
     const onChangeStart = (e: ChangeEvent<HTMLInputElement>) => {
         Number(e.currentTarget.value) < 0 || Number(e.currentTarget.value) >= max
-            ? props.setError(true)
-            : props.setError(false)
-        setStart(Number(e.currentTarget.value))
-        props.setOnSet(false)
+            // ? props.setError(true)
+            // : props.setError(false)
+            ? dispatch(setErrorAC(true))
+            : dispatch(setErrorAC(false))
+        // setStart(Number(e.currentTarget.value))
+        dispatch(updateValueAC({start: Number(e.currentTarget.value)}))
+        // props.setOnSet(false)
+        dispatch(onSetAC(false))
     }
+
     useEffect(() => {
         let counterMax = localStorage.getItem("counterMax")
         if (counterMax) {
             let max = JSON.parse(counterMax)
-            setMax(max)
+            dispatch(updateValueAC({max}))
         }
         let counterStart = localStorage.getItem("counterStart")
         if (counterStart) {
             let start = JSON.parse(counterStart)
-            setStart(start)
+            dispatch(updateValueAC({start}))
         }
     }, [])
 
@@ -58,14 +69,15 @@ export const CounterMenu = (props: CounterType) => {
                 </div>
                 <div className={s.menuCounterSpan}>
                     <span>start value</span>
-                    <input className={start < 0 || max <= start ? s.inputError : s.input} value={start} onChange={onChangeStart}
+                    <input className={start < 0 || max <= start ? s.inputError : s.input} value={start}
+                           onChange={onChangeStart}
                            type="number"/>
                 </div>
             </div>
             <div className={s.counterButton}>
                 <div>
                     <Button callBack={callBackLocalStorage}
-                            onSet={props.onSet}
+                            onSet={app.onSet}
                     >Set </Button>
                 </div>
             </div>
