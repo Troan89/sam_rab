@@ -1,12 +1,28 @@
-import {combineReducers, createStore} from "redux";
+import {applyMiddleware, combineReducers, legacy_createStore as createStore} from "redux";
 import {counterMenuReducer} from "../reduecrs/counterMenuReducer";
-import {appReducer} from "../reduecrs/appReducer";
+import {counterReducer} from "../reduecrs/counterReducer";
+import {thunk} from "redux-thunk";
 
 const rootReducer = combineReducers({
     counterMenu: counterMenuReducer,
-    app: appReducer
+    counter: counterReducer
 })
 
 export type AppState_T = ReturnType<typeof rootReducer>
 
-export const store = createStore(rootReducer)
+let preloadedState
+const persistedTodosString = localStorage.getItem('state')
+if (persistedTodosString) {
+    preloadedState = JSON.parse(persistedTodosString)
+}
+
+export const store = createStore(rootReducer, preloadedState, applyMiddleware(thunk))
+
+
+store.subscribe(()=> {
+    localStorage.setItem("startValue", JSON.stringify(store.getState().counter?.counter))
+    localStorage.setItem("maxValue", JSON.stringify(store.getState().counterMenu?.maxValue))
+    localStorage.setItem("minValue", JSON.stringify(store.getState().counterMenu?.minValue))
+})
+
+

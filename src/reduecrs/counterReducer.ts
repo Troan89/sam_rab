@@ -4,7 +4,7 @@ const initialState = {
     error: false
 }
 
-export const appReducer = (state: initialStateApp_T = initialState, action: ActionApp_T): initialStateApp_T => {
+export const counterReducer = (state: initialStateApp_T = initialState, action: ActionApp_T): initialStateApp_T => {
     switch (action.type) {
         case "COUNTER-START": {
             return {...state, counter: action.value}
@@ -26,6 +26,11 @@ type ActionApp_T =
     | ReturnType<typeof onSetAC>
     | ReturnType<typeof setErrorAC>
 export type initialStateApp_T = typeof initialState
+export type counter_T = {
+    counter: number,
+    onSet: boolean,
+    error: boolean
+}
 
 //action
 export const counterStartAC = (value: number) => ({type: 'COUNTER-START', value} as const)

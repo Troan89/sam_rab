@@ -4,58 +4,46 @@ import {Button} from "./Button";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState_T} from "./store/store";
 import {updateValueAC} from "./reduecrs/counterMenuReducer";
-import {counterStartAC, initialStateApp_T, onSetAC, setErrorAC} from "./reduecrs/appReducer";
+import {counter_T, counterStartAC, onSetAC, setErrorAC} from "./reduecrs/counterReducer";
 
 type CounterType = {}
 
 export const CounterMenu = (props: CounterType) => {
-    const max = useSelector<AppState_T, number>(state => state.counterMenu.max)
-    const start = useSelector<AppState_T, number>(state => state.counterMenu.start)
-    const app = useSelector<AppState_T, initialStateApp_T>(state => state.app)
+    const max = useSelector<AppState_T, number>(state => state.counterMenu.maxValue)
+    const start = useSelector<AppState_T, number>(state => state.counterMenu.minValue)
+    const counter = useSelector<AppState_T, counter_T>(state => state.counter)
 
     const dispatch = useDispatch()
 
     const callBackLocalStorage = () => {
-        localStorage.setItem("counterMax", JSON.stringify(max))
-        localStorage.setItem("counterStart", JSON.stringify(start))
-        // props.setCounter(start)
         dispatch(counterStartAC(start))
-        // props.setOnSet(true)
         dispatch(onSetAC(true))
     }
     const onChangeMax = (e: ChangeEvent<HTMLInputElement>) => {
         Number(e.currentTarget.value) <= start
-            // ? props.setError(true)
-            // : props.setError(false)
             ? dispatch(setErrorAC(true))
             : dispatch(setErrorAC(false))
-        // setMax(Number(e.currentTarget.value))
-        dispatch(updateValueAC({max: Number(e.currentTarget.value)}))
-        // props.setOnSet(false)
+        dispatch(updateValueAC({maxValue: Number(e.currentTarget.value)}))
         dispatch(onSetAC(false))
     }
     const onChangeStart = (e: ChangeEvent<HTMLInputElement>) => {
         Number(e.currentTarget.value) < 0 || Number(e.currentTarget.value) >= max
-            // ? props.setError(true)
-            // : props.setError(false)
             ? dispatch(setErrorAC(true))
             : dispatch(setErrorAC(false))
-        // setStart(Number(e.currentTarget.value))
-        dispatch(updateValueAC({start: Number(e.currentTarget.value)}))
-        // props.setOnSet(false)
+        dispatch(updateValueAC({minValue: Number(e.currentTarget.value)}))
         dispatch(onSetAC(false))
     }
 
     useEffect(() => {
-        let counterMax = localStorage.getItem("counterMax")
+        let counterMax = localStorage.getItem("maxValue")
         if (counterMax) {
-            let max = JSON.parse(counterMax)
-            dispatch(updateValueAC({max}))
+            let maxValue = JSON.parse(counterMax)
+            dispatch(updateValueAC({maxValue}))
         }
-        let counterStart = localStorage.getItem("counterStart")
+        let counterStart = localStorage.getItem("minValue")
         if (counterStart) {
-            let start = JSON.parse(counterStart)
-            dispatch(updateValueAC({start}))
+            let minValue = JSON.parse(counterStart)
+            dispatch(updateValueAC({minValue}))
         }
     }, [])
 
@@ -77,7 +65,7 @@ export const CounterMenu = (props: CounterType) => {
             <div className={s.counterButton}>
                 <div>
                     <Button callBack={callBackLocalStorage}
-                            onSet={app.onSet}
+                            onSet={counter.onSet}
                     >Set </Button>
                 </div>
             </div>
